@@ -92,14 +92,17 @@ void lastRun(char *exe, int readPrevPipe)
 		close(fds[1]);
 		execlp(exe,exe,NULL);
 		perror("execlp failed");
-		printf("%d\n",errno);
+		//printf("%d\n",errno);
         exit(errno);
 		
 	}
 	else{
 		close(readPrevPipe);
 		close(fds[1]);
-		waitpid(processID, NULL, 0);
+		int returnCode;
+		waitpid(processID, &returnCode, 0);
+		if (WIFEXITED(returnCode) && WEXITSTATUS(returnCode) != 0)
+			exit(WEXITSTATUS(returnCode));
 	}
 
 }
