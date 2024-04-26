@@ -10,14 +10,14 @@ int normalRun(char *exe, int readPrevPipe)
 	int fds[2];
 	if(pipe(fds)<0){
 		//errorExit("pipe fail");
-		perror("pipe fail");
-		exit(1);
+		perror("pipe failed");
+		exit(errno);
 	}
 	pid_t processID = fork();
 	if(processID < 0){
 		//fork failed
-		fprintf(stderr, "fork\n");
-		exit(1);
+		perror("fork failed");
+		exit(errno);
 	}
 	else if(processID ==0)
 	{
@@ -27,7 +27,7 @@ int normalRun(char *exe, int readPrevPipe)
 		close(fds[1]);
 		execlp(exe,exe,NULL);
 		perror("execlp");
-        exit(1);
+        exit(errno);
 		
 	}
 	else{
@@ -44,14 +44,13 @@ int firstRun(char *exe)
 	int fds[2];
 	if(pipe(fds)<0){
 		//errorExit("pipe fail");
-		perror("pipe fail");
-		exit(1);
+		perror("pipe failed");
+		exit(errno);
 	}
 	pid_t processID = fork();
 	if(processID < 0){
-		//fork failed
-		fprintf(stderr, "fork\n");
-		exit(1);
+		perror("fork failed");
+		exit(errno);
 	}
 	else if(processID ==0)
 	{
@@ -60,7 +59,7 @@ int firstRun(char *exe)
 		close(fds[1]);
 		execlp(exe,exe,NULL);
 		perror("execlp");
-        exit(1);
+        exit(errno);
 		
 	}
 	else{
@@ -77,22 +76,21 @@ void lastRun(char *exe, int readPrevPipe)
 	if(pipe(fds)<0){
 		//errorExit("pipe fail");
 		perror("pipe fail");
-		exit(1);
+		exit(errno);
 	}
 	pid_t processID = fork();
 	if(processID < 0){
-		//fork failed
-		fprintf(stderr, "fork\n");
-		exit(1);
+		perror("fork failed");
+		exit(errno);
 	}
-	else if(processID ==0)
+	else if(processID == 0)
 	{
 		dup2(readPrevPipe,0);
 		close(fds[0]);
 		close(fds[1]);
 		execlp(exe,exe,NULL);
 		perror("execlp");
-        exit(1);
+        exit(errno);
 		
 	}
 	else{
@@ -106,11 +104,14 @@ int main(int argc,char *argv[])
 {
 	if(argc < 2)
 	{
-		exit(EINVAL);
+		errno = EINVAL;
+		exit(errno);
 	}
 	if(argc == 2)
 	{
 		execlp(argv[1],argv[1], NULL);
+		perror("execlp");
+        exit(errno);
 	}
 	int readPrevPipe = firstRun(argv[1]);
 	for(int i =2; i <argc-1; i++){
