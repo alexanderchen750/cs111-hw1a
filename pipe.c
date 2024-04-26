@@ -27,6 +27,7 @@ int normalRun(char *exe, int readPrevPipe)
 		close(fds[1]);
 		execlp(exe,exe,NULL);
 		perror("execlp");
+		printf("%d\n",errno);
         exit(errno);
 		
 	}
@@ -59,6 +60,7 @@ int firstRun(char *exe)
 		close(fds[1]);
 		execlp(exe,exe,NULL);
 		perror("execlp");
+		printf("%d\n",errno);
         exit(errno);
 		
 	}
@@ -89,7 +91,8 @@ void lastRun(char *exe, int readPrevPipe)
 		close(fds[0]);
 		close(fds[1]);
 		execlp(exe,exe,NULL);
-		perror("execlp");
+		perror("execlp failed");
+		printf("%d\n",errno);
         exit(errno);
 		
 	}
