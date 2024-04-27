@@ -1,17 +1,19 @@
-## UID: 123456789
+## UID: 005998011
 
 ## Pipe Up
 
-One sentence description
+This program is meant to act like a pipe
 
 ## Building
 
-Explain briefly how to build your program
+To build, run make, then run ./pipe and the commands you want with one space. So ex. ./pipe ls cat wc
 
 ## Running
 
-Show an example run of your program, using at least two additional arguments, and what to expect
+./pipe ls cat wc should output the number of lines, words, and bytes from ls of current directory
+
+./pipe pwd wc should print out  lines, words, and bytes of output from pwd
 
 ## Cleaning up
 
-Explain briefly how to clean up all binary files
+make clean
